@@ -41,9 +41,9 @@ GraphVizFX supports six major graph algorithms with step-by-step visualization:
 
 ## Requirements
 
-- Java 17 or higher
-- JavaFX 17.0.6 or higher
-- Maven 3.6+ (for building)
+- Java 21 or higher
+- JavaFX 21.0.2
+- Maven (for building)
 
 ## Building
 
