@@ -2,7 +2,6 @@ package com.graphvizfx.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GraphModel {
     private List<GNode> nodes = new ArrayList<>();
@@ -23,7 +22,8 @@ public class GraphModel {
     }
 
     public boolean hasEdge(GNode u, GNode v) {
-        return edges.stream().anyMatch(e -> e.getSource() == u && e.getTarget() == v);
+        return edges.stream()
+                .anyMatch(e -> e.getSource() == u && e.getTarget() == v);
     }
 
     public List<GNode> getNodes() {
@@ -50,3 +50,4 @@ public class GraphModel {
         isWeighted = weighted;
     }
 }
+
