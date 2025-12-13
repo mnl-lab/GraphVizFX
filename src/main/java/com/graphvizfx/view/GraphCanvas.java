@@ -5,6 +5,7 @@ import com.graphvizfx.model.GEdge;
 import com.graphvizfx.model.GNode;
 import com.graphvizfx.model.GraphModel;
 import com.graphvizfx.model.VisualState;
+import com.graphvizfx.utils.MathUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -12,7 +13,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Canvas component for rendering and interacting with graphs.
+ * Handles node/edge drawing, mouse interactions, and visual state updates.
+ */
 public class GraphCanvas extends Pane {
+    private static final double EDGE_HIT_THRESHOLD = 5.0;
+    private static final double NODE_MARGIN = 20.0;
+    
     private Canvas canvas;
     private GraphController controller;
     private boolean interactive;
@@ -45,14 +53,12 @@ public class GraphCanvas extends Pane {
             GNode hit = hitTest(e.getX(), e.getY(), graph);
 
             if (e.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
-                // Right-clicking a node deletes it immediately (no context menu)
                 if (hit != null) {
                     controller.deleteNode(hit);
                     draw();
                     return;
                 }
 
-                // If not clicking a node, preserve edge context menu behavior
                 GEdge edgeHit = hitTestEdge(e.getX(), e.getY(), graph);
                 if (edgeHit != null) {
                     javafx.scene.control.ContextMenu cm = new javafx.scene.control.ContextMenu();
@@ -69,6 +75,7 @@ public class GraphCanvas extends Pane {
                                 edgeHit.setWeight(Integer.parseInt(s));
                                 draw();
                             } catch (Exception x) {
+                                // Ignore invalid values
                             }
                         });
                     });
@@ -86,28 +93,40 @@ public class GraphCanvas extends Pane {
                 } else {
                     if (edgeStart != hit) {
                         if (!graph.hasEdge(edgeStart, hit)) {
-                            int w = graph.isWeighted() ? (int) dist(edgeStart, hit) : 1;
-                            controller.addEdge(edgeStart, hit, w);
+                            try {
+                                int w = graph.isWeighted() ? (int) MathUtils.dist(edgeStart, hit) : 1;
+                                controller.addEdge(edgeStart, hit, w);
+                            } catch (IllegalArgumentException ex) {
+                                // Edge already exists or invalid - silently ignore
+                            }
                         }
                     }
                     edgeStart = null;
                     selectedNode = null;
                 }
-            } else {
-                if (edgeStart != null) {
-                    edgeStart = null;
                 } else {
-                    controller.addNode("N" + controller.getNextNodeId(), e.getX(), e.getY());
+                    if (edgeStart != null) {
+                        edgeStart = null;
+                    } else {
+                        try {
+                            controller.addNode("N" + controller.getNextNodeId(), e.getX(), e.getY());
+                        } catch (IllegalArgumentException ex) {
+                            // Node ID conflict - try with different ID
+                            controller.addNode("N" + System.currentTimeMillis(), e.getX(), e.getY());
+                        }
+                    }
                 }
-            }
             draw();
         });
 
         canvas.setOnMouseDragged(e -> {
             if (dragging && selectedNode != null) {
                 edgeStart = null;
-                selectedNode.setX(Math.max(20, Math.min(getWidth() - 20, e.getX())));
-                selectedNode.setY(Math.max(20, Math.min(getHeight() - 20, e.getY())));
+                double margin = NODE_MARGIN;
+                double maxX = Math.max(margin, getWidth() - margin);
+                double maxY = Math.max(margin, getHeight() - margin);
+                selectedNode.setX(Math.max(margin, Math.min(maxX, e.getX())));
+                selectedNode.setY(Math.max(margin, Math.min(maxY, e.getY())));
                 draw();
             }
         });
@@ -125,30 +144,71 @@ public class GraphCanvas extends Pane {
     }
 
     private GEdge hitTestEdge(double x, double y, GraphModel graph) {
+        double minDist = Double.MAX_VALUE;
+        GEdge closestEdge = null;
+        
         for (GEdge e : graph.getEdges()) {
-            double d = ptSegDist(e.getSource().getX(), e.getSource().getY(),
-                    e.getTarget().getX(), e.getTarget().getY(), x, y);
-            if (d < 5) {
-                return e;
+            double d;
+            
+            // For curved edges (bidirectional directed), check distance to curve
+            if (graph.isDirected() && graph.hasEdge(e.getTarget(), e.getSource())) {
+                double sx = e.getSource().getX(), sy = e.getSource().getY();
+                double tx = e.getTarget().getX(), ty = e.getTarget().getY();
+                double mx = (sx + tx) / 2;
+                double my = (sy + ty) / 2;
+                double dx = tx - sx, dy = ty - sy;
+                double dist = Math.hypot(dx, dy);
+                if (dist > 0.1) {
+                    double nx = -dy / dist * 30;
+                    double ny = dx / dist * 30;
+                    // Approximate curve with multiple points
+                    double curveX = mx + nx;
+                    double curveY = my + ny;
+                    d = Math.min(
+                        MathUtils.ptSegDist(sx, sy, curveX, curveY, x, y),
+                        MathUtils.ptSegDist(curveX, curveY, tx, ty, x, y)
+                    );
+                } else {
+                    d = MathUtils.ptSegDist(sx, sy, tx, ty, x, y);
+                }
+            } else {
+                d = MathUtils.ptSegDist(e.getSource().getX(), e.getSource().getY(),
+                        e.getTarget().getX(), e.getTarget().getY(), x, y);
+            }
+            
+            if (d < EDGE_HIT_THRESHOLD && d < minDist) {
+                minDist = d;
+                closestEdge = e;
             }
         }
-        return null;
+        return closestEdge;
     }
 
     public void draw() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         double w = getWidth();
         double h = getHeight();
+        
+        // Skip drawing if canvas is too small
+        if (w < 1 || h < 1) {
+            return;
+        }
+        
+        // Enable anti-aliasing for smoother rendering
+        gc.setImageSmoothing(true);
 
+        // Draw background
         gc.setFill(Color.web("#fcfcfc"));
         gc.fillRect(0, 0, w, h);
 
+        // Draw grid pattern
         gc.setStroke(Color.web("#eeeeee"));
         gc.setLineWidth(1);
-        for (double i = 0; i < w; i += 50) {
+        double gridSize = 50.0;
+        for (double i = 0; i < w; i += gridSize) {
             gc.strokeLine(i, 0, i, h);
         }
-        for (double i = 0; i < h; i += 50) {
+        for (double i = 0; i < h; i += gridSize) {
             gc.strokeLine(0, i, w, i);
         }
 
@@ -182,6 +242,10 @@ public class GraphCanvas extends Pane {
             double my = (sy + ty) / 2;
             double dx = tx - sx, dy = ty - sy;
             double dist = Math.hypot(dx, dy);
+            // Avoid division by zero
+            if (dist < 0.1) {
+                dist = 0.1;
+            }
             double nx = -dy / dist * 30;
             double ny = dx / dist * 30;
 
@@ -205,8 +269,17 @@ public class GraphCanvas extends Pane {
     }
 
     private void drawArrow(GraphicsContext gc, double sx, double sy, double tx, double ty, Color c) {
-        double angle = Math.atan2(ty - sy, tx - sx);
-        double r = 20;
+        double dx = tx - sx;
+        double dy = ty - sy;
+        double dist = Math.hypot(dx, dy);
+        
+        // Avoid division by zero for zero-length edges
+        if (dist < 0.1) {
+            return;
+        }
+        
+        double angle = Math.atan2(dy, dx);
+        double r = Math.min(20, dist * 0.3); // Scale arrow based on edge length
         double targetX = tx - r * Math.cos(angle);
         double targetY = ty - r * Math.sin(angle);
 
@@ -261,20 +334,6 @@ public class GraphCanvas extends Pane {
             gc.setFont(Font.font(11));
             gc.fillText(t, n.getX(), n.getY() - 24);
         }
-    }
-
-    private double ptSegDist(double x1, double y1, double x2, double y2, double px, double py) {
-        double dx = x2 - x1, dy = y2 - y1;
-        if (dx == 0 && dy == 0) {
-            return Math.hypot(px - x1, py - y1);
-        }
-        double t = ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy);
-        t = Math.max(0, Math.min(1, t));
-        return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
-    }
-
-    private double dist(GNode a, GNode b) {
-        return Math.hypot(a.getX() - b.getX(), a.getY() - b.getY());
     }
 
     public void setCurrentState(VisualState state) {
