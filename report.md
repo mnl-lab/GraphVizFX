@@ -112,6 +112,10 @@ By presenting algorithms side by side, the application highlights **differences 
 * Clear textual feedback synchronized with visual updates
 * Logs designed to complement, not replace, visualization
 
+### 3.6 Little demonstration
+Here is a little demonstration of the application in action:
+
+![Little Demonstration](little_demo.gif)
 ---
 
 ## 4. Technical Architecture
