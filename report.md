@@ -247,7 +247,19 @@ These limitations are acknowledged and documented for future work.
 ---
 
 ## 8. Software Quality and SonarQube Analysis
-placeholder
+
+### 2.1 Static Analysis (SonarQube)
+![SonarQube Analysis](sonarqube_analysis.png)
+
+| Metric | Result | Detail |
+| --- | --- | --- |
+| Quality Gate | Passed | Main branch, version 1.0-SNAPSHOT; ~1.9k LOC analyzed |
+| Reliability | B | 1 open issue (indicates at least one non-trivial bug) |
+| Maintainability | A | 47 open code smells |
+| Coverage | 25.8% | 1.2k lines to cover; markedly below target and tied to previously noted Critical Weaknesses |
+| Duplications | 4.8% | 2.4k lines analyzed, low duplication footprint |
+
+The static analysis confirms the project passes the Quality Gate with strong Security (A, 0 issues/hotspots) and Maintainability (A). However, the Reliability grade of B signals a remaining defect that should be addressed prior to release. Most notably, coverage at 25.8% leaves a significant portion of logic unverified; this gap directly aligns with the Critical Weaknesses highlighted in the Executive Summary and should be prioritized to mitigate undiscovered regressions. Duplications remain acceptable at 4.8%.
 
 ---
 
