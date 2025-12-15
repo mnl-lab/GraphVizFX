@@ -148,7 +148,7 @@ public class GraphVizFX extends Application {
 
         VBox navBox = new VBox(10, btnPrev, btnNext);
 
-        Label helper = new Label("Navigate each algorithm frame manually. This avoids janky auto animations and keeps rendering stable.");
+        Label helper = new Label("Navigate each algorithm frame.");
         helper.setWrapText(true);
         helper.setStyle("-fx-text-fill: #5c677d;");
 
