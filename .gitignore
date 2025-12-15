@@ -38,6 +38,7 @@ logs/
 *.tmp
 *.swp
 *.swo
+.temp/
 
 # Eclipse leftovers, in case you ever betray IntelliJ
 .project
