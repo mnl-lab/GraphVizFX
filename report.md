@@ -1,8 +1,84 @@
-# GraphVizFX
 
-## Project Report
+<!-- FRONT PAGE (FINAL, NO DRIFT, NORMAL FONT SIZE) -->
+<div style="
+  page-break-after: always;
+  text-align: center;
+  width: 100%;
+  margin-left: 4%;
+  margin-right: auto;
+  padding-top: 1cm;
+  font-size: 16pt;
+">
 
----
+<span style="font-size: 28pt; font-weight: bold;">
+GraphVizFX
+</span>
+
+<br><br>
+
+<span style="font-size: 16.5pt;">
+Graph Visualization and Algorithm Exploration Platform
+</span>
+
+<br><br><br>
+
+<span style="font-size: 16pt;">
+By<br>
+<strong>Manal Zaidi</strong><br>
+<strong>Youssef Bentaleb</strong>
+</span>
+
+<br><br><br>
+
+<img src="image-3.png" style="display: block; margin-left: auto; margin-right: auto; width: 70%;" />
+
+
+
+
+</div>
+
+
+
+
+
+<!-- TABLE OF CONTENTS -->
+<div style="page-break-after: always;">
+
+# Table of Contents
+
+- [1. Project Overview](#1-project-overview)
+- [2. Objectives and Educational Value](#2-objectives-and-educational-value)
+- [3. Feature Set](#3-feature-set)
+  - [3.1 Graph Construction and Editing](#31-graph-construction-and-editing)
+  - [3.2 Graph Layouts and Visualization](#32-graph-layouts-and-visualization)
+  - [3.3 Algorithm Visualization](#33-algorithm-visualization)
+  - [3.4 Algorithm Comparison Feature](#34-algorithm-comparison-feature)
+  - [3.5 Import, Export, and Persistence](#35-import-export-and-persistence)
+  - [3.6 Little demonstration](#36-little-demonstration)
+  - [3.5 Logging and Observability](#35-logging-and-observability)
+  - [3.6 Little demonstration](#36-little-demonstration)
+  - [4. Technical Architecture](#4-technical-architecture)
+    - [4.1 Technology Stack](#41-technology-stack)
+    - [4.2 Project Structure](#42-project-structure)
+  - [5. Implementation Details](#5-implementation-details)
+    - [5.1 Core Logic](#51-core-logic)
+    - [5.2 Algorithm Execution Flow](#52-algorithm-execution-flow)
+    - [5.3 Unit Testing](#53-unit-testing)
+  - [6. Challenges Encountered and Solutions](#6-challenges-encountered-and-solutions)
+    - [6.1 Integration of OpenStreetMap Data](#61-integration-of-openstreetmap-data)
+    - [6.2 JavaFX and Maven Compatibility Issues](#62-javafx-and-maven-compatibility-issues)
+    - [6.3 Logging Synchronization Issues](#63-logging-synchronization-issues)
+  - [7. Limitations](#7-limitations)
+  - [8. Software Quality and SonarQube Analysis](#8-software-quality-and-sonarqube-analysis)
+    - [8.1 Static Analysis (SonarQube)](#81-static-analysis-sonarqube)
+  - [9. Conclusion](#9-conclusion)
+  - [10. Special Thanks](#10-special-thanks)
+
+</div>
+
+
+
+
 
 ## 1. Project Overview
 
@@ -113,6 +189,7 @@ By presenting algorithms side by side, the application highlights **differences 
 * Logs designed to complement, not replace, visualization
 
 ### 3.6 Little demonstration
+
 Here is a little demonstration of the application in action:
 
 ![Little Demonstration](little_demo.gif)
@@ -248,7 +325,7 @@ These limitations are acknowledged and documented for future work.
 
 ## 8. Software Quality and SonarQube Analysis
 
-### 2.1 Static Analysis (SonarQube)
+### 8.1 Static Analysis (SonarQube)
 ![SonarQube Analysis](sonarqube_analysis.png)
 
 | Metric | Result | Detail |
@@ -279,3 +356,7 @@ These characteristics make GraphVizFX particularly well-suited for academic demo
 With continued refinement, quality analysis via SonarQube, and the addition of new algorithms and comparison metrics, GraphVizFX has the potential to evolve into a reference tool for graph algorithm visualization.
 
 In short, GraphVizFX is not just functional — it is **convincing, extensible, and academically valuable**.
+
+
+## 10. Special Thanks
+We would like to express our gratitude to Professor **Mr. Fahd Kalloubi** for providing the inspiration behind this remarkable project and for the invaluable opportunity to engage in its development.
