@@ -1,119 +1,190 @@
 # GraphVizFX
 
-A professional JavaFX application for interactive graph visualization and algorithm animation. GraphVizFX provides an intuitive interface for creating, editing, and visualizing graphs while demonstrating various graph algorithms with step-by-step animations.
+
+**GraphVizFX** is a professional-grade JavaFX application for **interactive graph construction, visualization, and algorithm comparison**. It is designed as both an educational tool and a solid software engineering project, combining algorithmic rigor with an intuitive and responsive user interface.
+
+The application allows users to build graphs dynamically, explore how classical algorithms behave internally, and directly compare multiple algorithms under identical conditions. Rather than focusing solely on results, GraphVizFX emphasizes **process, explanation, and visual clarity**.
+
+---
+
+## Why GraphVizFX
+
+GraphVizFX stands out from typical academic graph projects by focusing on:
+
+* **Explainability**: algorithms are visualized step by step, not treated as black boxes.
+* **Comparability**: multiple algorithms can be executed and compared on the same graph.
+* **Engineering quality**: clean architecture, modular design, and unit-tested core logic.
+* **Extensibility**: new algorithms, layouts, and features can be added with minimal friction.
+
+The project is suitable for:
+
+* students learning graph theory and algorithms,
+* instructors demonstrating algorithm behavior,
+* developers interested in JavaFX-based visualization systems.
+
+---
 
 ## Features
 
 ### Graph Creation & Editing
-- **Interactive Graph Editor**: Click to add nodes, drag to create edges
-- **Graph Modes**: Support for both directed and undirected graphs
-- **Weighted Edges**: Optional edge weights for weighted algorithms
-- **Context Menu**: Right-click nodes and edges to delete or edit properties
-- **Node Dragging**: Drag nodes to reposition them on the canvas
+
+* **Interactive graph editor**: click to create nodes, connect them to form edges
+* **Directed and undirected graphs**
+* **Weighted edges** for shortest-path and MST algorithms
+* **Context menus** for editing and deletion
+* **Drag-and-drop node positioning** with stable layout behavior
 
 ### Layout Algorithms
-- **Circular Layout**: Arrange nodes in a circular pattern
-- **Grid Layout**: Organize nodes in a grid structure
-- **Force-Directed Layout**: Automatic layout using force-directed algorithm
+
+* **Circular layout** for uniform visualization
+* **Grid layout** for structured graphs
+* **Force-directed layout** for automatic spatial organization
+
+Layouts can be applied at any time without altering the underlying graph structure.
 
 ### Graph Algorithms
-GraphVizFX supports six major graph algorithms with step-by-step visualization:
 
-1. **BFS (Breadth-First Search)**: Traverse graphs level by level
-2. **DFS (Depth-First Search)**: Explore graphs using depth-first traversal
-3. **Dijkstra's Algorithm**: Find shortest paths in weighted graphs
-4. **A\* Algorithm**: Heuristic pathfinding with visual feedback
-5. **Prim's Algorithm**: Construct minimum spanning trees
-6. **Kruskal's Algorithm**: Alternative MST construction method
+GraphVizFX supports the visualization of major graph algorithms:
 
-### Visualization Features
-- **Step-by-Step Animation**: Step through algorithm execution
-- **Color-Coded States**: Visual representation of algorithm progress
-- **Distance Labels**: Display calculated distances on nodes
-- **Dual Mode Comparison**: Compare two algorithms side-by-side
-- **Execution Logs**: Detailed step-by-step algorithm logs
-- **Adjustable Animation Speed**: Control playback speed with slider
+* **Breadth-First Search (BFS)**
+* **Depth-First Search (DFS)**
+* **Dijkstra’s shortest path algorithm**
+* **A\* pathfinding algorithm**
+* **Prim’s minimum spanning tree algorithm**
+* **Kruskal’s minimum spanning tree algorithm**
+
+Each algorithm execution is:
+
+* deterministic and reproducible,
+* visually highlighted (visited nodes, selected edges),
+* accompanied by textual execution logs.
+
+### Algorithm Comparison Mode
+
+A key feature of GraphVizFX is its **dual algorithm comparison mode**:
+
+* Two algorithms can be executed on the **same graph** simultaneously
+* Differences in traversal strategy and path selection are immediately visible
+* Particularly effective for comparing BFS vs DFS or Dijkstra vs A*
+
+This feature transforms theoretical comparisons into direct visual evidence.
+
+### Visualization & Playback
+
+* Step-by-step algorithm animation
+* Adjustable execution speed
+* Color-coded visual states
+* Distance and cost labels displayed directly on nodes
+* Execution log panel synchronized with visual updates
 
 ### Import & Export
-- **JSON Import/Export**: Save and load graph structures
-- **OSM Import**: Import graph data from OpenStreetMap files
-- **Image Export**: Export graph visualizations as PNG images
+
+* **JSON import/export** for graph persistence
+* **Image export (PNG)** for reports and presentations
+* Experimental OpenStreetMap import (currently disabled due to data quality limitations)
+
+![Demo Placeholder](little_demo.gif)
+---
 
 ## Requirements
 
-- Java 21 or higher
-- JavaFX 21.0.2
-- Maven (for building)
+* **Java 21** or higher
+* **JavaFX 21.0.2**
+* **Maven**
 
-## Building
+---
+
+## Building the Project
 
 ```bash
 mvn clean compile
 ```
 
-## Running
+---
+
+## Running the Application
+
+Using Maven:
 
 ```bash
 mvn javafx:run
 ```
 
-Or compile and run manually:
+Or by packaging manually:
 
 ```bash
 mvn clean package
 java -cp target/classes:target/dependency/* com.graphvizfx.app.GraphVizFX
 ```
 
+---
+
 ## Project Structure
 
 ```
 src/main/java/com/graphvizfx/
-├── app/              # Main application entry point
-├── model/            # Graph data models (GNode, GEdge, GraphModel, VisualState)
-├── view/             # UI components (GraphCanvas)
-├── controller/       # Business logic and event handling
-├── algorithms/       # Graph algorithm implementations
-├── layout/           # Graph layout algorithms
-├── io/               # File import/export handlers
-└── utils/            # Utility functions
+├── app/              # Application entry point
+├── model/            # Core graph data structures
+├── algorithms/       # Algorithm implementations
+├── layout/           # Graph layout strategies
+├── view/             # JavaFX visualization components
+├── controller/       # Event handling and coordination logic
+├── io/               # Import/export (JSON, images)
+└── utils/            # Shared utility helpers
 ```
 
-## Usage
+The architecture cleanly separates algorithmic logic from UI concerns, enabling unit testing and future extensions.
+
+---
+
+## Usage Guide
 
 ### Creating a Graph
-1. Click anywhere on the canvas to add a node
-2. Click a node, then click another node to create an edge
+
+1. Click on the canvas to create nodes
+2. Select a node, then another to create an edge
 3. Drag nodes to reposition them
-4. Right-click nodes or edges to delete them
+4. Use right-click to edit or delete elements
+- PS: Ensure graph consistency when deleting nodes/edges. And you can toggle between directed and undirected modes via the buttons in the navigation bar.
 
 ### Running Algorithms
+
 1. Select an algorithm from the dropdown menu
-2. Click "Run" to execute the algorithm
-3. Use playback controls to step through the algorithm
-4. View detailed logs in the execution log panel
+2. Choose a starting node if required
+3. Click **Run Once** to start execution
+4. Control execution using playback buttons and speed slider
+5. Follow progress via visual highlights and logs
 
 ### Comparing Algorithms
-1. Select the first algorithm
-2. Click "Dual Mode"
-3. Choose a second algorithm to compare
-4. Both algorithms run side-by-side for comparison
+
+1. Select an algorithm for the left panel and select start node
+2. Click the **Compare** button
+3. Select a second algorithm for the right panel and select start node
+4. Click "Next Step" to advance both algorithms in sync
 
 ### Layout Management
-- Use the Layout dropdown in the toolbar to apply different layouts
-- Toggle "Directed" and "Weighted" modes as needed
+
+* Apply layouts from the layout selector
+* Switch between directed and weighted modes as needed
 
 ### File Operations
-- **Import JSON**: Load a previously saved graph
-- **Export JSON**: Save the current graph structure
-- **Export Image**: Save the current visualization as PNG
 
-## Architecture
+* Import graphs from JSON
+* Export graphs to JSON
+* Export visualizations as PNG images
 
-GraphVizFX follows a clean architecture pattern:
+---
 
-- **Model**: Pure data classes with no UI dependencies
-- **View**: UI components that render the model
-- **Controller**: Mediates between view and model, handles business logic
-- **Algorithms**: Strategy pattern for extensible algorithm system
-- **Layout**: Interface-based layout system for easy extension
-- **I/O**: Separate package for file operations
+## Testing & Quality
+
+* Core logic and algorithms are covered by **JUnit 5 unit tests**
+* UI components are intentionally excluded from unit testing
+* Implementation adheres to **SOLID principles** and clean architecture
+* Imports are tested for robustness against malformed data
+
+--- 
+
+
+
+
+
