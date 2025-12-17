@@ -78,13 +78,14 @@ This feature transforms theoretical comparisons into direct visual evidence.
 * Distance and cost labels displayed directly on nodes
 * Execution log panel synchronized with visual updates
 
+![Demo Placeholder](little_demo.gif)
+
 ### Import & Export
 
 * **JSON import/export** for graph persistence
 * **Image export (PNG)** for reports and presentations
 * Experimental OpenStreetMap import (currently disabled due to data quality limitations)
 
-![Demo Placeholder](little_demo.gif)
 ---
 
 ## Requirements
@@ -184,8 +185,3 @@ The architecture cleanly separates algorithmic logic from UI concerns, enabling 
 * Imports are tested for robustness against malformed data
 
 --- 
-
-
-
-
-
