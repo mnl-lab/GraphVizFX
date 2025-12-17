@@ -115,7 +115,7 @@ By presenting algorithms side by side, the application highlights **differences 
 ### 3.6 Little demonstration
 Here is a little demonstration of the application in action:
 
-![Little Demonstration](little_demo.gif)
+![Little Demonstration](../little_demo.gif)
 ---
 
 ## 4. Technical Architecture
